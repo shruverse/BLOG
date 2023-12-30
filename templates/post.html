@@ -8,18 +8,15 @@
         <img src="/static/images/1.jpg" class="img-fluid blog-post-image mt-5" alt="Blog Image"> <!-- Added class blog-post-image -->
 
         <!-- Blog Post Title -->
-        <h2 class="text-center mt-4">Blog Post Title</h2>
+        <h2 class="text-center mt-4">{{ post.title }}</h2>
 
         <!-- Blog Post Date -->
-        <p class="text-center">Date: January 1, 2023</p>
+        <p class="text-center">{{ post.date }}</p>
 
         <!-- Main Content of the Blog Post -->
         <div class="mt-4">
           <div class="col-lg-8 mx-auto"> <!-- Adjusted width for paragraphs -->
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac sapien urna. Nulla nec convallis nunc. Quisque luctus sem at risus venenatis, a lacinia sapien consectetur.
-              <!-- More Lorem Ipsum content -->
-            </p>
+            <p>{{ post.body }}</p>
           </div>
         </div>
       </div>
