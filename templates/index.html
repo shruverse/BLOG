@@ -10,7 +10,7 @@
           <div class="card-body">
             <h2 class="card-title">Main Blog Title</h2>
             <p class="card-text">Date Created: January 1, 2023</p>
-            <form action="{{ url_for('blog') }}"> <!-- Updated form to retain CSS -->
+            <form action="#">
               <button type="submit" class="your-button-class">Read More</button>
             </form>
           </div>
@@ -19,91 +19,37 @@
     </div>
   </section>
 
-  <!-- Gallery View of Blogs (2x3 grid) -->
-  <section class="container mt-4">
-    <div class="row align-items-center justify-content-center">
-      <!-- Blog 1 -->
+<!-- Gallery View of Blogs (2x3 grid) -->
+<section class="container mt-4">
+  <div class="row align-items-center justify-content-center">
+    {% for post in all_posts %}
       <div class="col-md-5">
         <div class="card mb-4">
-          <img src="blog1-image.jpg" class="card-img-top" alt="Blog 1 Image">
+          <img src="{{post.img_url}}" class="card-img-top" alt="Blog 1 Image">
           <div class="card-body">
-            <h5 class="card-title">Blog 1 Title</h5>
-            <p class="card-text">Date Created: January 2, 2023</p>
-             <div class="text-center">
-            <form action="{{ url_for('blog') }}"> <!-- Updated form to retain CSS -->
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.date }}</p>
+            <form action="{{ url_for('show_post', post_id=post.id) }}"> <!-- Updated form to retain CSS -->
               <button type="submit" class="your-button-class">Read More</button>
             </form>
-              </div>
           </div>
         </div>
       </div>
-      <!-- Repeat for Blogs 2 to 6 (similar structure) -->
-      <!-- Blog 2 -->
-        <div class="col-md-5">
-        <div class="card mb-4">
-          <img src="blog1-image.jpg" class="card-img-top" alt="Blog 1 Image">
-          <div class="card-body">
-            <h5 class="card-title">Blog 1 Title</h5>
-            <p class="card-text">Date Created: January 2, 2023</p>
-            <div class="text-center">
-            <button><a href="main-blog-link.html"></a>Read More</button>
-              </div>
-          </div>
-        </div>
+      {% if loop.index % 2 == 0 %}
+        </div><div class="row align-items-center justify-content-center">
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+      <!-- New Post -->
+      {% if current_user.id == 1: %}
+      <div class="d-flex justify-content-end mb-4 mx-4">
+        <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">New Post</a>
       </div>
-      <!-- Blog 3 -->
-        <div class="col-md-5">
-        <div class="card mb-4">
-          <img src="blog1-image.jpg" class="card-img-top" alt="Blog 1 Image">
-          <div class="card-body">
-            <h5 class="card-title">Blog 1 Title</h5>
-            <p class="card-text">Date Created: January 2, 2023</p>
-            <div class="text-center">
-            <button><a href="main-blog-link.html"></a>Read More</button>
-              </div>
-          </div>
-        </div>
-      </div>
-      <!-- Blog 4 -->
-        <div class="col-md-5">
-        <div class="card mb-4">
-          <img src="blog1-image.jpg" class="card-img-top" alt="Blog 1 Image">
-          <div class="card-body">
-            <h5 class="card-title">Blog 1 Title</h5>
-            <p class="card-text">Date Created: January 2, 2023</p>
-            <div class="text-center">
-            <button><a href="main-blog-link.html"></a>Read More</button>
-              </div>
-          </div>
-        </div>
-      </div>
-      <!-- Blog 5 -->
-        <div class="col-md-5">
-        <div class="card mb-4">
-          <img src="/static/images/1.jpg" class="card-img-top" alt="Blog 1 Image">
-          <div class="card-body">
-            <h5 class="card-title">Blog 1 Title</h5>
-            <p class="card-text">Date Created: January 2, 2023</p>
-            <div class="text-center">
-            <button><a href="main-blog-link.html"></a>Read More</button>
-              </div>
-          </div>
-        </div>
-      </div>
-      <!-- Blog 6 -->
-        <div class="col-md-5">
-        <div class="card mb-4">
-          <img src="/static/images/bg.jpg" class="card-img-top" alt="Blog 1 Image">
-          <div class="card-body">
-            <h5 class="card-title">Blog 1 Title</h5>
-            <p class="card-text">Date Created: January 2, 2023</p>
-            <div class="text-center">
-            <button><a href="main-blog-link.html"></a>Read More</button>
-              </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+      {% endif %}
+
+   <!-- Pager-->
+
 
 {% include "footer.html" %}

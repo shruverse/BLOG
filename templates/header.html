@@ -13,7 +13,7 @@
   <!--Navbar-->
   <nav class="navbar navbar-expand-lg navbar-light bg-light py-4 fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="{{ url_for ('home') }}">
+        <a class="navbar-brand" href="{{ url_for ('get_all_posts') }}">
           <img src="/static/tastycious-logo-zip-file/png/logo-no-background.png" class="logo" alt="Logo" width="100px" height="auto">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse nav-buttons" id="navbarNav">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for ('home') }}">Home</a>
+              <a class="nav-link" href="{{ url_for ('get_all_posts') }}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for ('about') }}">About</a>
@@ -30,7 +30,18 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for ('contact') }}">Contact</a>
             </li>
-
+              {% if not current_user.is_authenticated: %}
+              <li class="nav-item">
+              <a class="nav-link" href="{{ url_for ('login') }}">Login</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{{ url_for ('register') }}">Register</a>
+            </li>
+              {% else: %}
+              <li class="nav-item">
+              <a class="nav-link" href="{{ url_for ('logout') }}">Logout</a>
+            </li>
+              {% endif %}
           </ul>
         </div>
       </div>
