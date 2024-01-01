@@ -3,18 +3,24 @@
   <!-- Main Blog Section -->
   <section class="container mt-5">
     <div class="row">
+      {% if all_posts %}
+      {% set main_blog_post = all_posts[-1] %}
       <div class="col-md-10 mx-auto main-blog">
         <!-- Main Blog -->
         <div class="card mb-4">
-          <img src="/static/images/1.jpg" class="card-img-top" alt="Main Blog Image">
+          <img src="{{ main_blog_post.img_url }}" class="card-img-top" alt="Main Blog Image">
           <div class="card-body">
-            <h2 class="card-title">Main Blog Title</h2>
-            <p class="card-text">Date Created: January 1, 2023</p>
-            <form action="#">
+            <p style="color: blueviolet; font-weight: 900;">Latest post!!</p>
+            <h2 class="card-title">{{ main_blog_post.title }}</h2>
+            <p class="card-text">{{ main_blog_post.date }}</p>
+            <form action="{{ url_for('show_post', post_id=main_blog_post.id) }}">
               <button type="submit" class="your-button-class">Read More</button>
             </form>
           </div>
         </div>
+        {% else %}
+        <p>No posts available</p>
+      {% endif %}
       </div>
     </div>
   </section>
