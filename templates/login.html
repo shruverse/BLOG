@@ -12,14 +12,15 @@
 
     <div class="row">
       <!-- Adding Flash message here for users trying to register twice -->
+
+      <div class="col-lg-6 col-md-10 mx-auto" style="font-weight: 900;">
       {% with messages = get_flashed_messages() %}
       {% if messages %}
       {% for message in messages %}
-      <p class="flash">{{ message }}</p>
+      <p class="flash" style="color: red;">{{ message }}</p>
       {% endfor %}
       {% endif %}
       {% endwith %}
-      <div class="col-lg-6 col-md-10 mx-auto" style="font-weight: 900;">
         <!--Rendering login form here-->
         {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
         <div class="form-group">
