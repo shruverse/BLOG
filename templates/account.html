@@ -1,0 +1,43 @@
+{% include "header.html" %}
+<section class="my-5 py-5">
+    <div class="row container mx-auto">
+        <div class="text-center mt-3 pt-5 col-lg-6 col-md-12 col-sm-12">
+        <h3 class="font-weight-bold">Account info</h3>
+            <hr class="mx-auto">
+            <div class="account-info">
+                <p>Name: <span>{{ user.name }}</span></p>
+                <p>Email: <span>{{ user.email }}</span></p>
+                <p><a href="{{ url_for('logout') }}" id="logout-btn">Logout</a></p>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12">
+    <form id="change-password-form" method="POST" action="{{ url_for('account') }}">
+        <h3>Change password</h3>
+        <hr class="mx-auto">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {{ change_password_form.hidden_tag() }}
+        <div class="form-group">
+            {{ change_password_form.current_password.label }} {{ change_password_form.current_password(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ change_password_form.new_password.label }} {{ change_password_form.new_password(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ change_password_form.confirm_new_password.label }} {{ change_password_form.confirm_new_password(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Change Password</button>
+        </div>
+    </form>
+</div>
+    </div>
+</section>
+{% include "footer.html" %}

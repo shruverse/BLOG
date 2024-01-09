@@ -3,14 +3,14 @@ from flask import Flask, abort, render_template, redirect, url_for, flash
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
-from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user
+from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 
 # Import your forms from the forms.py
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -164,6 +164,28 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('get_all_posts'))
+
+
+@app.route('/account', methods=["GET", "POST"])
+@login_required
+def account():
+    change_password_form = ChangePasswordForm()
+    if change_password_form.validate_on_submit():
+        # Logic to change the password
+        user = User.query.get(current_user.id)
+        if user and check_password_hash(user.password, change_password_form.current_password.data):
+            if change_password_form.new_password.data == change_password_form.confirm_new_password.data:
+                user.password = generate_password_hash(change_password_form.new_password.data, method='pbkdf2:sha256',
+                                                       salt_length=8)
+                db.session.commit()
+                flash("Password changed successfully!")
+                return redirect(url_for('account'))
+            else:
+                flash("New passwords don't match. Please try again.")
+        else:
+            flash("Incorrect current password. Please try again.")
+    user = User.query.get(current_user.id)
+    return render_template("account.html", change_password_form=change_password_form, current_user=current_user, user=user)
 
 
 @app.route('/')
