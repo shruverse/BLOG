@@ -2,8 +2,11 @@
 <section class="my-5 py-5">
     <div class="row container mx-auto">
         <div class="text-center col-lg-2 col-md-6 col-sm-12">
-          <img src="/static/images/about.jpg" alt="Avatar" class="img-fluid rounded-circle" style="max-width: 200px;">
-        </div>
+          {% if current_user.profile_picture %}
+            <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_picture) }}" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 200px;">
+          {% else %}
+            <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Profile Picture" class="img-fluid rounded-circle" style="max-width: 200px;">
+          {% endif %}</div>
         <div class="text-center mt-3 pt-5 col-lg-4 col-md-6 col-sm-12">
         <h3 class="font-weight-bold">Account info</h3>
             <hr class="mx-auto">
@@ -11,7 +14,14 @@
                 <p>Name: <span>{{ user.name }}</span></p>
                 <p>Email: <span>{{ user.email }}</span></p>
                 <p><a href="{{ url_for('logout') }}" id="logout-btn">Logout</a></p>
-                <p><a href="#" id="change-pfp">Change Profile picture</a></p>
+                <form id="change-profile-picture-form" method="POST" action="{{ url_for('upload_profile_picture') }}" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="file" id="profile_picture" name="profile_picture">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary mt-3">Upload</button>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">

@@ -41,14 +41,15 @@
             <!-- Show all comments -->
             {% for comment in post.comments: %}
             <li>
-              <div class="commenterImage">
-                <img
-                  src="{{ comment.comment_author.email | gravatar }}"
-                />
+              <div class="commenterImage me-3">
+                {% if comment.comment_author.profile_picture %}
+                  <img src="{{ url_for('static', filename='profile_pics/' + comment.comment_author.profile_picture) }}" class="comment-img" alt="Profile Picture" /><span class="sub-text">{{comment.comment_author.name}}</span>
+                {% else %}
+                  <img src="{{ url_for('static', filename='images/default.jpg') }}" class="comment-img" alt="Default Profile Picture" /><span class="sub-text">{{comment.comment_author.name}}</span>
+                {% endif %}
               </div>
               <div class="commentText" style="font-weight: 900;">
                 {{comment.text|safe}}
-                <span class="sub-text">{{comment.comment_author.name}}</span>
               </div>
             </li>
             {% endfor %}

@@ -1,13 +1,13 @@
 from datetime import date
-from flask import Flask, abort, render_template, redirect, url_for, flash
+from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
-from flask_gravatar import Gravatar
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
+import os
 
 # Import your forms from the forms.py
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm
@@ -27,15 +27,15 @@ def load_user(user_id):
     return db.get_or_404(User, user_id)
 
 
-# For adding profile images to the comment section
-gravatar = Gravatar(app,
-                    size=100,
-                    rating='g',
-                    default='retro',
-                    force_default=False,
-                    force_lower=False,
-                    use_ssl=False,
-                    base_url=None)
+# # For adding profile images to the comment section
+# gravatar = Gravatar(app,
+#                     size=100,
+#                     rating='g',
+#                     default='retro',
+#                     force_default=False,
+#                     force_lower=False,
+#                     use_ssl=False,
+#                     base_url=None)
 
 # CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
@@ -67,10 +67,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(100))
-    # This will act like a list of BlogPost objects attached to each User.
-    # The "author" refers to the author property in the BlogPost class.
+    profile_picture = db.Column(db.String(250))
     posts = relationship("BlogPost", back_populates="author")
-    # Parent relationship: "comment_author" refers to the comment_author property in the Comment class.
     comments = relationship("Comment", back_populates="comment_author")
 
 
@@ -79,11 +77,8 @@ class Comment(db.Model):
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.Text, nullable=False)
-    # Child relationship:"users.id" The users refers to the tablename of the User class.
-    # "comments" refers to the comments property in the User class.
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     comment_author = relationship("User", back_populates="comments")
-    # Child Relationship to the BlogPosts
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
     parent_post = relationship("BlogPost", back_populates="comments")
 
@@ -186,6 +181,22 @@ def account():
             flash("Incorrect current password. Please try again.")
     user = User.query.get(current_user.id)
     return render_template("account.html", change_password_form=change_password_form, current_user=current_user, user=user)
+
+
+@app.route('/upload-profile-picture', methods=['POST'])
+@login_required
+def upload_profile_picture():
+    if 'profile_picture' in request.files:
+        profile_picture = request.files['profile_picture']
+        if profile_picture.filename != '':
+            # Save the uploaded file to a specific directory (e.g., 'static/profile_pics')
+            profile_picture.save(os.path.join(app.root_path, 'static/profile_pics', profile_picture.filename))
+
+            # Update the current user's profile picture field with the file name or link
+            current_user.profile_picture = profile_picture.filename  # Or store the file path as needed
+            db.session.commit()
+            flash('Profile picture updated successfully!')
+    return redirect(url_for('account'))
 
 
 @app.route('/')
