@@ -1,0 +1,9 @@
+{% include "header.html" %}
+
+<h2 style="margin-top: 200px;">You searched for...</h2>
+<p>{{searched}}</p>
+<br>
+{% for post in posts %}
+<a style="font-weight: 900;" href="{{ url_for('show_post', post_id=post.id) }}">{{ post.title }}</a><br>
+{% endfor %}
+{% include "footer.html" %}

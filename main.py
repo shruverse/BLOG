@@ -10,7 +10,7 @@ from sqlalchemy.orm import relationship
 import os
 
 # Import your forms from the forms.py
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm, SearchForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -26,16 +26,6 @@ login_manager.init_app(app)
 def load_user(user_id):
     return db.get_or_404(User, user_id)
 
-
-# # For adding profile images to the comment section
-# gravatar = Gravatar(app,
-#                     size=100,
-#                     rating='g',
-#                     default='retro',
-#                     force_default=False,
-#                     force_lower=False,
-#                     use_ssl=False,
-#                     base_url=None)
 
 # CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
@@ -159,6 +149,23 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('get_all_posts'))
+
+
+@app.context_processor
+def header():
+    form = SearchForm()
+    return dict(form=form)
+
+
+@app.route('/search', methods=['POST'])
+def search():
+    form = SearchForm()
+    posts = BlogPost.query
+    if form.validate_on_submit():
+        get_all_posts.searched = form.searched.data
+        posts = posts.filter(BlogPost.body.like('%' + get_all_posts.searched + '%'))
+        posts = posts.order_by(BlogPost.title).all()
+        return render_template('search.html', form=form, searched=get_all_posts.searched, posts=posts)
 
 
 @app.route('/account', methods=["GET", "POST"])
