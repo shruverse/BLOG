@@ -28,7 +28,7 @@
 <!-- Gallery View of Blogs (2x3 grid) -->
 <section class="container mt-4">
   <div class="row align-items-center justify-content-center">
-    {% for post in all_posts[::-1] %}
+    {% for post in all_posts[-4:][::-1] %}
       <div class="col-md-5">
         <div class="card mb-4">
           <img src="{{post.img_url}}" class="card-img-top" alt="Blog 1 Image">
@@ -48,9 +48,13 @@
   </div>
 </section>
 
+<div class="d-flex justify-content-end mb-4 mx-5">
+  <a class="btn btn-primary float-right" href="{{url_for('all_posts')}}">See All Posts</a>
+</div>
+
       <!-- New Post -->
       {% if current_user.id == 1: %}
-      <div class="d-flex justify-content-end mb-4 mx-4">
+      <div class="d-flex justify-content-end mb-4 mx-5">
         <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">New Post</a>
       </div>
       {% endif %}
