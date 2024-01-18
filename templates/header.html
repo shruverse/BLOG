@@ -19,7 +19,7 @@
         <form method="POST" action="{{ url_for('search') }}" class="input-group rounded" role="search" style="min-width: 200px;">
           {{ form.hidden_tag() }}
           <input type="search" name="searched" style="font-weight: 900;" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-          <button class="btn btn-outline" style="font-weight: 900;" type="submit"><img src="static/images/search-line.png"></button>
+          <button class="btn btn-outline" style="font-weight: 900;" type="submit"><img src="{{ url_for ('static', filename='images/search-line.png')}}"></button>
         </form>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

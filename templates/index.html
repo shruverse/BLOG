@@ -28,7 +28,7 @@
 <!-- Gallery View of Blogs (2x3 grid) -->
 <section class="container mt-4">
   <div class="row align-items-center justify-content-center">
-    {% for post in all_posts[-4:][::-1] %}
+    {% for post in all_posts[-5:-1][::-1] %}
       <div class="col-md-5">
         <div class="card mb-4">
           <img src="{{post.img_url}}" class="card-img-top" alt="Blog 1 Image">
@@ -59,7 +59,6 @@
       </div>
       {% endif %}
 
-   <!-- Pager-->
 
 
 {% include "footer.html" %}
