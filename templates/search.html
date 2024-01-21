@@ -1,8 +1,10 @@
 {% include "header.html" %}
 
 <section class="container">
-  <h3 class="mx-auto" style="margin-top: 200px; margin-bottom: 20px;">You searched for : {{searched}}</h3>
+  <h3 class="mx-auto" style="margin-top: 200px; margin-bottom: 20px;">You searched for : <em>{{searched}}</em></h3>
   <div class="row align-items-center justify-content-center">
+    {% if searched %}
+    {% if posts %}
     {% for post in posts[::-1] %}
       <div class="col-md-5">
         <div class="card mb-4">
@@ -20,6 +22,12 @@
         </div><div class="row align-items-center justify-content-center">
       {% endif %}
     {% endfor %}
+  {% else %}
+        <h4>No results found for '{{ searched }}'...</h4>
+      {% endif %}
+    {% else %}
+      <h4>Please enter a search term...</h4>
+    {% endif %}
   </div>
 </section>
 

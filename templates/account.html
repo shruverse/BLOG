@@ -7,8 +7,8 @@
           {% else %}
             <img src="{{ url_for('static', filename='images/default.jpg') }}" alt="Default Profile Picture" class="img-responsive rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
           {% endif %}</div>
-        <div class="text-center mt-3 pt-5 col-lg-4 col-md-6 col-sm-12">
-        <h3 class="font-weight-bold">Account info</h3>
+        <div class="text-center col-lg-4 col-md-6 col-sm-12">
+        <h3 class="font-weight-bold" style="margin: 5px auto; padding: 15px;">Account info</h3>
             <hr class="mx-auto">
             <div class="account-info">
                 <p>Name: <span>{{ user.name }}</span></p>

@@ -163,10 +163,14 @@ def search():
     form = SearchForm()
     posts = BlogPost.query
     if form.validate_on_submit():
-        get_all_posts.searched = form.searched.data
-        posts = posts.filter(BlogPost.body.like('%' + get_all_posts.searched + '%'))
-        posts = posts.order_by(BlogPost.title).all()
-        return render_template('search.html', form=form, searched=get_all_posts.searched, posts=posts)
+        searched_term = form.searched.data
+        if searched_term:
+            posts = posts.filter(BlogPost.body.like('%' + searched_term + '%'))
+            posts = posts.order_by(BlogPost.title).all()
+        else:
+            posts = []
+        return render_template('search.html', form=form, searched=searched_term, posts=posts)
+    return render_template('search.html', form=form, searched=None, posts=None)
 
 
 @app.route('/account', methods=["GET", "POST"])
@@ -334,7 +338,7 @@ def users_table():
 def comments_table():
     result_comments = db.session.execute(db.select(Comment))
     all_comments = result_comments.scalars().all()
-    return render_template("admin/comments-table.html",comments=all_comments)
+    return render_template("admin/comments-table.html", comments=all_comments)
 
 
 if __name__ == "__main__":
