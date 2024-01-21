@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="website icon" href="/static/images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css" integrity="sha384-BY+fdrpOd3gfeRvTSMT+VUZmA728cfF9Z2G42xpaRkUGu2i3DyzpTURDo5A6CaLK" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+<body>
+{% if current_user.id == 1: %}
+<!--navbar-->
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <a style="color: white; margin-left: 20px;" class="navbar-brand" href="{{ url_for('dashboard') }}">Admin</a>
+  <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a style="color: white;" class="nav-link" href="{{ url_for ('logout') }}">Logout</a>
+      </li>
+  </ul>
+</nav>
+
+<!--sidebar menu-->
+<div class="row">
+<div class="col-md-2 col-sm-12" style="font-weight: 900;">
+    <nav id="sidebarMenu" style="min-height: 1000px;" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('users_table') }}">Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('comments_table') }}">Comments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('posts_table') }}">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_new_post') }}">Add Post</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>
+
+<!--comments-->
+<div class="col-md-10 justify-content-between flex-wrap align-items-center">
+ <h2 class="text-center">Comments</h2>
+    <div class="table-responsive" style="font-weight: 900;">
+        <table class="table table-striped table-sn">
+            <thead>
+                <tr>
+                    <th scope="col">Post</th>
+                    <th scope="col">User</th>
+                    <th scope="col">Comment</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                    <tr>
+                        <td>{{ comment.parent_post.title }}</td>
+                        <td>{{ comment.comment_author.name }}</td>
+                        <td>{{ comment.text|striptags }}</td>
+                        <td><a class="btn btn-danger" href="#">Delete</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<!--pagination-->
+<nav aria-label="page navigation example" style="font-weight: 900;">
+        <ul class="pagination mt-5">
+          <li class="page-item disabled "><a class="page-link" href="#">Prev</a></li>
+          <li class="page-item"><a class="page-link" href="?page_no=1">1</a></li>
+          <li class="page-item"><a class="page-link" href="?page_no=2">2</a></li>
+                    <li class="page-item  "><a class="page-link" href="?page_no=2">Next</a></li>
+        </ul>
+       </nav>
+       </div>
+</div>
+
+
+{% else %}
+<h1>You are not allowed to access admin panel.</h1>
+{% endif %}
+</body>
+</html>

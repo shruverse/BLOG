@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="website icon" href="/static/images/logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css" integrity="sha384-BY+fdrpOd3gfeRvTSMT+VUZmA728cfF9Z2G42xpaRkUGu2i3DyzpTURDo5A6CaLK" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+</head>
+<body>
+{% if current_user.id == 1: %}
+<!--navbar-->
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <a style="color: white; margin-left: 20px;" class="navbar-brand" href="{{ url_for('dashboard') }}">Admin</a>
+  <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a style="color: white;" class="nav-link" href="{{ url_for ('logout') }}">Logout</a>
+      </li>
+  </ul>
+</nav>
+
+<!--sidebar menu-->
+<div class="row">
+<div class="col-md-2 col-sm-12" style="font-weight: 900;">
+    <nav id="sidebarMenu" style="min-height: 1000px;" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{{ url_for('dashboard') }}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('users_table') }}">Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('comments_table') }}">Comments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('posts_table') }}">Posts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_new_post') }}">Add Post</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>
+
+<!--    cards   -->
+    <div class="col-lg-10">
+        <h2 class="text-center">Dashboard</h2>
+  <div class="card-group" style="margin-top: 30px;">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title text-center" style="background-color: #1d1d1d; border-radius: 15px; color: white;">Total Posts</h5>
+      <p class="card-text text-center" style="font-size: 72px; color: blueviolet; font-weight: 900;">{{ total_posts }}</p>
+      <a href="{{ url_for('posts_table') }}" class="card-link" style="font-weight: 900;">See More</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title text-center" style="background-color: #1d1d1d; border-radius: 15px; color: white;">Total Users</h5>
+      <p class="card-text text-center" style="font-size: 72px; color: blueviolet; font-weight: 900;">{{ total_users }}</p>
+      <a href="{{ url_for('users_table') }}" class="card-link" style="font-weight: 900;">See More</a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title text-center" style="background-color: #1d1d1d; border-radius: 15px; color: white;">Total Comments</h5>
+      <p class="card-text text-center" style="font-size: 72px; color: blueviolet; font-weight: 900;">{{ total_comments }}</p>
+      <a href="{{ url_for('comments_table') }}" class="card-link" style="font-weight: 900;">See More</a>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+{% else %}
+<h1>You are not allowed to access admin panel.</h1>
+{% endif %}
+</body>
+</html>
