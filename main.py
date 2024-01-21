@@ -91,7 +91,6 @@ def admin_only(f):
     return decorated_function
 
 
-# Register new users into the User database
 @app.route('/register', methods=["GET", "POST"])
 def register():
     form = RegisterForm()
@@ -268,7 +267,7 @@ def add_new_post():
 
 
 # Use a decorator so only an admin user can edit a post
-@app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
+@app.route("/admin/edit-post/<int:post_id>", methods=["GET", "POST"])
 def edit_post(post_id):
     post = db.get_or_404(BlogPost, post_id)
     edit_form = CreatePostForm(
@@ -290,7 +289,7 @@ def edit_post(post_id):
 
 
 # Use a decorator so only an admin user can delete a post
-@app.route("/delete/<int:post_id>")
+@app.route("/admin/delete-post/<int:post_id>")
 @admin_only
 def delete_post(post_id):
     post_to_delete = db.get_or_404(BlogPost, post_id)
@@ -311,13 +310,10 @@ def contact():
 
 @app.route("/admin/dashboard")
 def dashboard():
-    # Fetch dynamic data
     total_posts = db.session.query(func.count(BlogPost.id)).scalar()
     total_users = db.session.query(func.count(User.id)).scalar()
     total_comments = db.session.query(func.count(Comment.id)).scalar()
-
     return render_template("admin/dashboard.html", total_posts=total_posts, total_users=total_users, total_comments=total_comments)
-
 
 
 @app.route("/admin/posts")
@@ -339,6 +335,18 @@ def comments_table():
     result_comments = db.session.execute(db.select(Comment))
     all_comments = result_comments.scalars().all()
     return render_template("admin/comments-table.html", comments=all_comments)
+
+
+@app.route("/admin/delete-user/<int:user_id>")
+@admin_only
+def delete_user(user_id):
+    user_to_delete = db.get_or_404(User, user_id)
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    flash("User deleted successfully!")
+    result = db.session.execute(db.select(User))
+    all_users = result.scalars().all()
+    return render_template("admin/users-table.html", users=all_users)
 
 
 if __name__ == "__main__":
