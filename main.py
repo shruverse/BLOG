@@ -349,5 +349,16 @@ def delete_user(user_id):
     return render_template("admin/users-table.html", users=all_users)
 
 
+@app.route("/admin/delete_comment/<int:comment_id>")
+def delete_comment(comment_id):
+    comment_to_delete = db.get_or_404(Comment, comment_id)
+    db.session.delete(comment_to_delete)
+    db.session.commit()
+    flash("Comment deleted successfully!")
+    result_comments = db.session.execute(db.select(Comment))
+    all_comments = result_comments.scalars().all()
+    return render_template("admin/comments-table.html", comments=all_comments)
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

@@ -50,6 +50,13 @@
 <!--comments-->
 <div class="col-md-10 justify-content-between flex-wrap align-items-center">
  <h2 class="text-center">Comments</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      {% for message in messages %}
+      <p class="flash" style="color: red;">{{ message }}</p>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
     <div class="table-responsive" style="font-weight: 900;">
         <table class="table table-striped table-sn">
             <thead>
@@ -66,7 +73,7 @@
                         <td>{{ comment.parent_post.title }}</td>
                         <td>{{ comment.comment_author.name }}</td>
                         <td>{{ comment.text|striptags }}</td>
-                        <td><a class="btn btn-danger" href="#">Delete</a></td>
+                        <td><a class="btn btn-danger" href="{{url_for('delete_comment', comment_id=comment.id)}}">Delete</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
