@@ -11,7 +11,7 @@ from sqlalchemy import func, desc
 import os
 
 # Import your forms from the forms.py
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm, SearchForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm, SearchForm, ChangeEmailForm, ChangeUsernameForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -382,7 +382,7 @@ def delete_post(post_id):
     flash("Post deleted successfully!")
     result = db.session.execute(db.select(BlogPost))
     posts = result.scalars().all()
-    return render_template("admin/posts-table.html", all_posts=posts)
+    return render_template("admin/posts-table.html", all_posts=posts, page=1)
 
 
 @app.route("/delete-account/<int:del_id>")
@@ -395,6 +395,40 @@ def delete_account(del_id):
         db.session.commit()
         flash("Account deleted successfully!")
         return redirect(url_for("get_all_posts"))
+
+
+@app.route('/change-email', methods=["GET", "POST"])
+@login_required
+def change_email():
+    change_email_form = ChangeEmailForm()
+    if change_email_form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        if user and check_password_hash(user.password, change_email_form.current_password.data):
+            user.email = change_email_form.new_email.data
+            db.session.commit()
+            flash("Email changed successfully!")
+            return redirect(url_for("account"))
+        else:
+            flash("Incorrect current password. Please try again.")
+    user = User.query.get(current_user.id)
+    return render_template("change-email.html", form=change_email_form, current_user=current_user, user=user)
+
+
+@app.route('/change-username', methods=["GET", "POST"])
+@login_required
+def change_username():
+    change_username_form = ChangeUsernameForm()
+    if change_username_form.validate_on_submit():
+        user = User.query.get(current_user.id)
+        if user and check_password_hash(user.password, change_username_form.current_password.data):
+            user.name = change_username_form.new_username.data
+            db.session.commit()
+            flash("Username changed successfully!")
+            return redirect(url_for("account"))
+        else:
+            flash("Incorrect current password. Please try again.")
+    user = User.query.get(current_user.id)
+    return render_template("change-username.html", form=change_username_form, current_user=current_user, user=user)
 
 
 if __name__ == "__main__":

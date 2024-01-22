@@ -1,6 +1,15 @@
 {% include "header.html" %}
 <section class="my-5 py-5">
     <div class="row container mx-auto">
+         {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <div class="text-center col-lg-2 col-md-6 col-sm-12">
           {% if current_user.profile_picture %}
             <img src="{{ url_for('static', filename='profile_pics/' + current_user.profile_picture) }}" alt="Profile Picture" class="img-responsive rounded-circle" style="width: 200px; height: 200px; object-fit: cover;">
@@ -29,15 +38,6 @@
     <form id="change-password-form" method="POST" action="{{ url_for('account') }}">
         <h3>Change password</h3>
         <hr class="mx-auto">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
         {{ change_password_form.hidden_tag() }}
         <div class="form-group">
             {{ change_password_form.current_password.label }} {{ change_password_form.current_password(class="form-control") }}
@@ -57,8 +57,14 @@
 
 <!-- account change buttons  -->
 <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 20px; max-width: 250px;">
-  <a href="#" class="btn btn-primary">Change Email Id</a>
-  <a href="#" class="btn btn-primary">Change Username</a>
+   <form id="change-email" method="POST" action="{{ url_for('change_email') }}">
+       {{ form.hidden_tag() }}
+            <button type="submit" class="btn btn-primary" style="width: 100%">Change Email</button>
+   </form>
+  <form id="change-username" method="POST" action="{{ url_for('change_username') }}">
+       {{ form.hidden_tag() }}
+            <button type="submit" class="btn btn-primary" style="width: 100%">Change Username</button>
+   </form>
   <a type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete Account</a>
 </div>
 

@@ -44,3 +44,15 @@ class ChangePasswordForm(FlaskForm):
 class SearchForm(FlaskForm):
     searched = StringField("Searched", validators=[DataRequired()])
     submit = SubmitField("Search")
+
+
+class ChangeEmailForm(FlaskForm):
+    new_email = StringField("Email", validators=[DataRequired()])
+    current_password = PasswordField("Current Password", validators=[DataRequired()])
+    submit = SubmitField("Change Password")
+
+
+class ChangeUsernameForm(FlaskForm):
+    new_username = StringField("Username", validators=[DataRequired()])
+    current_password = PasswordField("Current Password", validators=[DataRequired()])
+    submit = SubmitField("Change Password")

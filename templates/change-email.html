@@ -1,0 +1,20 @@
+{% from "bootstrap5/form.html" import render_form %} {% block content %}
+{% include "header.html" %}
+
+<section class="my-5 py-5">
+    <div class="container text-center mt-3 pt-5">
+       <h2 class="form-weight-bold">Change Email ID</h2>
+       <hr class="mx-auto">
+    </div>
+
+    <div class="mx-auto container">
+         <div class="row">
+      <div class="col-lg-6 col-md-10 mx-auto" style="font-weight: 900;">
+      <!--Rendering the registration form here-->
+      {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+      </div>
+    </div>
+    </div>
+</section>
+
+{% include "footer.html" %} {% endblock %}
