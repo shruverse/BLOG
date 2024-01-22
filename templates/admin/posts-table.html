@@ -91,10 +91,11 @@
 <!--pagination-->
 <nav aria-label="page navigation example" style="font-weight: 900;">
         <ul class="pagination mt-5">
-          <li class="page-item disabled "><a class="page-link" href="#">Prev</a></li>
-          <li class="page-item"><a class="page-link" href="?page_no=1">1</a></li>
-          <li class="page-item"><a class="page-link" href="?page_no=2">2</a></li>
-                    <li class="page-item  "><a class="page-link" href="?page_no=2">Next</a></li>
+          <li class="page-item {% if page == 1 %}disabled{% endif %}"><a class="page-link" href="{{ url_for('posts_table', page=1) }}">First</a></li>
+          <li class="page-item {% if page == 1 %}disabled{% endif %}"><a class="page-link" href="{{ url_for('posts_table', page=page-1) }}">Prev</a></li>
+          <li class="page-item"><a class="page-link">Current : {{ page }}</a></li>
+          <li class="page-item {% if page == num_pages %}disabled{% endif %}"><a class="page-link" href="{{ url_for('posts_table', page=page+1) }}">Next</a></li>
+          <li class="page-item {% if page == num_pages %}disabled{% endif %}"><a class="page-link" href="{{ url_for('posts_table', page=num_pages) }}">Last</a></li>
         </ul>
        </nav>
        </div>

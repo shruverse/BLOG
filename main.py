@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
-from sqlalchemy import func
+from sqlalchemy import func, desc
 import os
 
 # Import your forms from the forms.py
@@ -218,9 +218,15 @@ def get_all_posts():
 
 @app.route("/all-posts")
 def all_posts():
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
-    return render_template("all-posts.html", all_posts=posts, current_user=current_user)
+    post_per_page = 12
+    page = int(request.args.get('page', 1))
+    start = (page - 1) * post_per_page
+    end = start + post_per_page
+    total_posts = db.session.query(db.func.count(BlogPost.id)).scalar()
+    num_pages = (total_posts + post_per_page - 1) // post_per_page
+    result = db.session.query(BlogPost).order_by(desc(BlogPost.id)).slice(start, end)
+    posts = result.all()
+    return render_template("all-posts.html", all_posts=posts, current_user=current_user, page=page, num_pages=num_pages)
 
 
 # Add a POST method to be able to post comments
@@ -307,23 +313,41 @@ def dashboard():
 
 @app.route("/admin/posts")
 def posts_table():
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
-    return render_template("admin/posts-table.html", all_posts=posts)
+    posts_per_page = 10
+    page = int(request.args.get('page', 1))
+    start = (page - 1) * posts_per_page
+    end = start + posts_per_page
+    total_posts = db.session.query(db.func.count(BlogPost.id)).scalar()
+    num_pages = (total_posts + posts_per_page - 1) // posts_per_page
+    result = db.session.query(BlogPost).order_by(desc(BlogPost.id)).slice(start, end)
+    posts = result.all()
+    return render_template("admin/posts-table.html", all_posts=posts, page=page, num_pages=num_pages)
 
 
 @app.route("/admin/users")
 def users_table():
-    result = db.session.execute(db.select(User))
-    all_users = result.scalars().all()
-    return render_template("admin/users-table.html", users=all_users)
+    users_per_page = 10
+    page = int(request.args.get('page', 1))
+    start = (page - 1) * users_per_page
+    end = start + users_per_page
+    total_users = db.session.query(db.func.count(User.id)).scalar()
+    num_pages = (total_users + users_per_page - 1) // users_per_page
+    result = db.session.query(User).order_by(desc(User.id)).slice(start, end)
+    users = result.all()
+    return render_template("admin/users-table.html", users=users, page=page, num_pages=num_pages)
 
 
 @app.route("/admin/comments")
 def comments_table():
-    result_comments = db.session.execute(db.select(Comment))
-    all_comments = result_comments.scalars().all()
-    return render_template("admin/comments-table.html", comments=all_comments)
+    comments_per_page = 10
+    page = int(request.args.get('page', 1))
+    start = (page - 1) * comments_per_page
+    end = start + comments_per_page
+    total_comments = db.session.query(db.func.count(Comment.id)).scalar()
+    num_pages = (total_comments + comments_per_page - 1) // comments_per_page
+    result = db.session.query(Comment).order_by(desc(Comment.id)).slice(start, end)
+    comments = result.all()
+    return render_template("admin/comments-table.html", comments=comments, page=page, num_pages=num_pages)
 
 
 @app.route("/admin/delete-user/<int:user_id>")

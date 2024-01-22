@@ -50,10 +50,11 @@
   <div class="pagination-container">
         <nav aria-label="page navigation example">
         <ul class="pagination mt-5">
-          <li class="page-item disabled "><a class="page-link" href="#">Prev</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item disabled "><a class="page-link" href="#">Next</a></li>
+          <li class="page-item {% if page == 1 %}disabled{% endif %}"><a class="page-link" href="{{ url_for('all_posts', page=1) }}">First</a></li>
+          <li class="page-item {% if page == 1 %}disabled{% endif %}"><a class="page-link" href="{{ url_for('all_posts', page=page-1) }}">Prev</a></li>
+          <li class="page-item"><a class="page-link">Current : {{ page }}</a></li>
+          <li class="page-item {% if page == num_pages %}disabled{% endif %}"><a class="page-link" href="{{ url_for('all_posts', page=page+1) }}">Next</a></li>
+          <li class="page-item {% if page == num_pages %}disabled{% endif %}"><a class="page-link" href="{{ url_for('all_posts', page=num_pages) }}">Last</a></li>
         </ul>
        </nav>
   </div>
