@@ -177,7 +177,6 @@ def search():
 def account():
     change_password_form = ChangePasswordForm()
     if change_password_form.validate_on_submit():
-        # Logic to change the password
         user = User.query.get(current_user.id)
         if user and check_password_hash(user.password, change_password_form.current_password.data):
             if change_password_form.new_password.data == change_password_form.confirm_new_password.data:
@@ -288,19 +287,6 @@ def edit_post(post_id):
     return render_template("admin/make-post.html", form=edit_form, is_edit=True, current_user=current_user)
 
 
-# Use a decorator so only an admin user can delete a post
-@app.route("/admin/delete-post/<int:post_id>")
-@admin_only
-def delete_post(post_id):
-    post_to_delete = db.get_or_404(BlogPost, post_id)
-    db.session.delete(post_to_delete)
-    db.session.commit()
-    flash("Post deleted successfully!")
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
-    return render_template("admin/posts-table.html", all_posts=posts)
-
-
 @app.route("/about")
 def about():
     return render_template("about.html", current_user=current_user)
@@ -361,6 +347,30 @@ def delete_comment(comment_id):
     result_comments = db.session.execute(db.select(Comment))
     all_comments = result_comments.scalars().all()
     return render_template("admin/comments-table.html", comments=all_comments)
+
+
+@app.route("/admin/delete-post/<int:post_id>")
+@admin_only
+def delete_post(post_id):
+    post_to_delete = db.get_or_404(BlogPost, post_id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    flash("Post deleted successfully!")
+    result = db.session.execute(db.select(BlogPost))
+    posts = result.scalars().all()
+    return render_template("admin/posts-table.html", all_posts=posts)
+
+
+@app.route("/delete-account/<int:del_id>")
+@login_required
+def delete_account(del_id):
+    if del_id == current_user.id:
+        account_to_delete = User.query.get_or_404(del_id)
+        db.session.delete(account_to_delete)
+        logout()
+        db.session.commit()
+        flash("Account deleted successfully!")
+        return redirect(url_for("get_all_posts"))
 
 
 if __name__ == "__main__":

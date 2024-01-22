@@ -52,7 +52,16 @@
             <button type="submit" class="btn btn-primary">Change Password</button>
         </div>
     </form>
+
 </div>
+
+<!-- account change buttons  -->
+<div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 20px; max-width: 250px;">
+  <a href="#" class="btn btn-primary">Change Email Id</a>
+  <a href="#" class="btn btn-primary">Change Username</a>
+  <a href="{{url_for('delete_account', del_id=user.id)}}" class="btn btn-danger">Delete Account</a>
+</div>
+
     </div>
 </section>
 {% include "footer.html" %}
