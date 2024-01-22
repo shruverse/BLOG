@@ -59,7 +59,26 @@
 <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 20px; max-width: 250px;">
   <a href="#" class="btn btn-primary">Change Email Id</a>
   <a href="#" class="btn btn-primary">Change Username</a>
-  <a href="{{url_for('delete_account', del_id=user.id)}}" class="btn btn-danger">Delete Account</a>
+  <a type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Delete Account</a>
+</div>
+
+        <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5" id="staticBackdropLabel">Delete Account</h3>
+        <a type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></a>
+      </div>
+      <div class="modal-body">
+        <h5>Your account will be completely deleted, do you want to go ahead?</h5>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+        <a type="button" href="{{url_for('delete_account', del_id=user.id)}}" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
 </div>
 
     </div>
