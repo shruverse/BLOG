@@ -34,7 +34,7 @@
         <div class="card mb-4">
           <img src="{{post.img_url}}" class="card-img-top" alt="Blog 1 Image">
           <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
+            <h4 class="card-title">{{ post.title }}</h4>
             <p class="card-text">{{ post.date }}</p>
             <form action="{{ url_for('show_post', post_id=post.id) }}"> <!-- Updated form to retain CSS -->
               <button type="submit" class="your-button-class">Read More</button>

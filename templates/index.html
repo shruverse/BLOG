@@ -17,7 +17,7 @@
         <div class="card mb-4">
           <img src="{{ main_blog_post.img_url }}" class="card-img-top" alt="Main Blog Image">
           <div class="card-body">
-            <p style="color: blueviolet; font-weight: 900;">Latest post!!</p>
+            <h4 style="color: blueviolet; font-weight: 900; margin-bottom: 15px;">Latest post!!</h4>
             <h2 class="card-title">{{ main_blog_post.title }}</h2>
             <p class="card-text">{{ main_blog_post.date }}</p>
             <form action="{{ url_for('show_post', post_id=main_blog_post.id) }}">
@@ -40,7 +40,7 @@
         <div class="card mb-4">
           <img src="{{post.img_url}}" class="card-img-top" alt="Blog 1 Image">
           <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
+            <h4 class="card-title">{{ post.title }}</h4>
             <p class="card-text">{{ post.date }}</p>
             <form action="{{ url_for('show_post', post_id=post.id) }}"> <!-- Updated form to retain CSS -->
               <button type="submit" class="your-button-class">Read More</button>
@@ -53,19 +53,44 @@
       {% endif %}
     {% endfor %}
   </div>
-</section>
 
-<div class="d-flex justify-content-end mb-4 mx-5">
-  <a class="btn btn-primary float-right" href="{{url_for('all_posts')}}">See All Posts</a>
+
+<div class="container text-center mt-5 pt-5">
+    <h2>Or you could . . .</h2>
+    <hr class="mx-auto">
+    </div>
+
+<div class="row">
+   <div class="col-md-10 mx-auto">
+
+  <div class="card text-center" style="font-weight: 900; margin-top: 20px; margin-bottom: 30px;">
+  <div class="card-header"><h4>See all blog posts together</h4></div>
+  <div class="card-body" style="background: linear-gradient(to left, #efd5ff, #515ada);">
+    <a class="btn btn-primary" href="{{url_for('all_posts')}}">All Posts</a>
+  </div>
+</div>
+  <div class="card text-center" style="font-weight: 900; margin-top: 20px; margin-bottom: 30px;">
+  <div class="card-header"><h4>Suggest a blog idea</h4></div>
+  <div class="card-body" style="background: linear-gradient(to right, #efd5ff, #515ada);">
+    <a class="btn btn-primary" href="#">Suggest</a>
+  </div>
+</div>
+{% if current_user.id == 1: %}
+  <div class="card text-center" style="font-weight: 900; margin-top: 20px; margin-bottom: 30px;">
+  <div class="card-header"><h4>Welcome back Admin</h4></div>
+  <div class="card-body" style="background: linear-gradient(to left, #efd5ff, #515ada);">
+    <a class="btn btn-primary" href="{{url_for('dashboard')}}">Admin Panel</a>
+  </div>
+</div>
+{% endif %}
+
+  </div>
+
 </div>
 
-      <!-- Admin -->
-      {% if current_user.id == 1: %}
-      <div class="d-flex justify-content-end mb-4 mx-5">
-        <a class="btn btn-primary float-right" href="{{url_for('dashboard')}}">Admin Panel</a>
-      </div>
-      {% endif %}
 
 
+
+</section>
 
 {% include "footer.html" %}

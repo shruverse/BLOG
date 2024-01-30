@@ -23,7 +23,7 @@
                 <p>Name: <span>{{ user.name }}</span></p>
                 <p>Email: <span>{{ user.email }}</span></p>
                 <p><a href="{{ url_for('logout') }}" id="logout-btn">Logout</a></p>
-                <p style="color: blueviolet;">Change profile picture ↓</p>
+                <p style="color: blueviolet;">Change profile picture &darr;</p>
                 <form id="change-profile-picture-form" method="POST" action="{{ url_for('upload_profile_picture') }}" enctype="multipart/form-data">
                     <div class="form-group">
                         <input type="file" id="profile_picture" name="profile_picture">
@@ -55,11 +55,16 @@
 
 </div>
 
+    <div class="container text-center mt-5 pt-5">
+    <h2>Account Settings</h2>
+    <hr class="mx-auto">
+    </div>
+
 <!-- account change buttons  -->
 <div class="d-grid gap-2 col-6 mx-auto" style="margin-top: 20px; max-width: 250px;">
    <form id="change-email" method="POST" action="{{ url_for('change_email') }}">
        {{ form.hidden_tag() }}
-            <button type="submit" class="btn btn-primary" style="width: 100%">Change Email</button>
+            <button type="submit" class="btn btn-primary" style="width: 100%">Change Email ID</button>
    </form>
   <form id="change-username" method="POST" action="{{ url_for('change_username') }}">
        {{ form.hidden_tag() }}
