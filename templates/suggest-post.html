@@ -1,0 +1,51 @@
+{% from "bootstrap5/form.html" import render_form %}
+{% block content %}
+  {% include "header.html" %}
+
+  <!-- Page Header -->
+  <div style="margin-top: 50px; font-weight: 900;" class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>Suggest a Post</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="mb-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          {{ ckeditor.load() }}
+          {{ ckeditor.config(name='body') }}
+
+          <form method="POST" action="{{ url_for('suggest_post') }}">
+            {{ form.csrf_token }}
+
+            <div class="mb-3">
+              {{ form.title.label(class="form-label") }}
+              {{ form.title(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+              {{ form.reason.label(class="form-label") }}
+              {{ form.reason(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+              {{ form.body.label(class="form-label") }}
+              {{ form.body(class="form-control") }}
+            </div>
+
+            <div class="mb-3">
+              {{ form.submit(class="btn btn-primary") }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  {% include "footer.html" %}
+{% endblock %}

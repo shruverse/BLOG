@@ -56,3 +56,10 @@ class ChangeUsernameForm(FlaskForm):
     new_username = StringField("Username", validators=[DataRequired()])
     current_password = PasswordField("Current Password", validators=[DataRequired()])
     submit = SubmitField("Change Password")
+
+
+class SuggestPostForm(FlaskForm):
+    title = StringField("What should the title be?", validators=[DataRequired()])
+    reason = StringField("Reason for Suggestion", validators=[DataRequired()])
+    body = CKEditorField("Suggest Post Content (You can add suitable images too)", validators=[DataRequired()])
+    submit = SubmitField("Suggest")

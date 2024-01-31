@@ -11,7 +11,7 @@ from sqlalchemy import func, desc
 import os
 
 # Import your forms from the forms.py
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm, SearchForm, ChangeEmailForm, ChangeUsernameForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ChangePasswordForm, SearchForm, ChangeEmailForm, ChangeUsernameForm, SuggestPostForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -34,7 +34,6 @@ db = SQLAlchemy()
 db.init_app(app)
 
 
-# CONFIGURE TABLES
 class BlogPost(db.Model):
     __tablename__ = "blog_posts"
     id = db.Column(db.Integer, primary_key=True)
@@ -51,7 +50,6 @@ class BlogPost(db.Model):
     comments = relationship("Comment", back_populates="parent_post")
 
 
-# Create a User table for all your registered users
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
@@ -63,7 +61,6 @@ class User(UserMixin, db.Model):
     comments = relationship("Comment", back_populates="comment_author")
 
 
-# Create a table for the comments on the blog posts
 class Comment(db.Model):
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
@@ -72,6 +69,14 @@ class Comment(db.Model):
     comment_author = relationship("User", back_populates="comments")
     post_id = db.Column(db.Integer, db.ForeignKey("blog_posts.id"))
     parent_post = relationship("BlogPost", back_populates="comments")
+
+
+class Suggestions(db.Model):
+    __tablename__ = "suggestions"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), nullable=False)
+    reason = db.Column(db.String(250), nullable=False)
+    body = db.Column(db.Text, nullable=False)
 
 
 with app.app_context():
@@ -308,7 +313,8 @@ def dashboard():
     total_posts = db.session.query(func.count(BlogPost.id)).scalar()
     total_users = db.session.query(func.count(User.id)).scalar()
     total_comments = db.session.query(func.count(Comment.id)).scalar()
-    return render_template("admin/dashboard.html", total_posts=total_posts, total_users=total_users, total_comments=total_comments)
+    total_suggestions = db.session.query(func.count(Suggestions.id)).scalar()
+    return render_template("admin/dashboard.html", total_posts=total_posts, total_users=total_users, total_comments=total_comments, total_suggestions=total_suggestions)
 
 
 @app.route("/admin/posts")
@@ -350,6 +356,20 @@ def comments_table():
     return render_template("admin/comments-table.html", comments=comments, page=page, num_pages=num_pages)
 
 
+@app.route("/admin/suggestions")
+@admin_only
+def suggestions_table():
+    suggestions_per_page = 10
+    page = int(request.args.get('page', 1))
+    start = (page - 1) * suggestions_per_page
+    end = start + suggestions_per_page
+    total_suggestions = db.session.query(db.func.count(Suggestions.id)).scalar()
+    num_pages = (total_suggestions + suggestions_per_page - 1) // suggestions_per_page
+    result = db.session.query(Suggestions).order_by(desc(Suggestions.id)).slice(start, end)
+    suggestions = result.all()
+    return render_template("admin/suggestions-table.html", suggestions=suggestions, page=page, num_pages=num_pages)
+
+
 @app.route("/admin/delete-user/<int:user_id>")
 @admin_only
 def delete_user(user_id):
@@ -383,6 +403,18 @@ def delete_post(post_id):
     result = db.session.execute(db.select(BlogPost))
     posts = result.scalars().all()
     return render_template("admin/posts-table.html", all_posts=posts, page=1)
+
+
+@app.route("/admin/delete-suggestion/<int:suggestion_id>")
+@admin_only
+def delete_suggestion(suggestion_id):
+    suggestion_to_delete = db.get_or_404(Suggestions, suggestion_id)
+    db.session.delete(suggestion_to_delete)
+    db.session.commit()
+    flash("Suggestion deleted successfully!")
+    result = db.session.query(Suggestions).order_by(desc(Suggestions.id))
+    suggestions = result.all()
+    return render_template("admin/suggestions-table.html", suggestions=suggestions, page=1)
 
 
 @app.route("/delete-account/<int:del_id>")
@@ -429,6 +461,25 @@ def change_username():
             flash("Incorrect current password. Please try again.")
     user = User.query.get(current_user.id)
     return render_template("change-username.html", form=change_username_form, current_user=current_user, user=user)
+
+
+@app.route('/suggest-post', methods=["GET", "POST"])
+def suggest_post():
+    suggest_form = SuggestPostForm()
+    if suggest_form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash("You need to login or register to suggest.")
+            return redirect(url_for("login"))
+        new_suggestion = Suggestions(
+            title=suggest_form.title.data,
+            reason=suggest_form.reason.data,
+            body=suggest_form.body.data,
+        )
+        db.session.add(new_suggestion)
+        db.session.commit()
+        flash("Post suggestion submitted successfully, Thank you for your suggestions.")
+        return redirect(url_for("get_all_posts"))
+    return render_template("suggest-post.html", form=suggest_form, current_user=current_user)
 
 
 if __name__ == "__main__":

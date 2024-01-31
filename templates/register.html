@@ -12,7 +12,11 @@ include "header.html" %}
       <div class="col-lg-6 col-md-10 mx-auto" style="font-weight: 900;">
       <!--Rendering the registration form here-->
       {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <div class="form-group" style="margin-top: 10px;">
+            <a id="register-url" style="text-decoration: none; font-weight: 900; color: blueviolet; font-size: 1.2em;" href="{{ url_for ('login') }}">Already have an account? Login!</a>
+        </div>
       </div>
+
     </div>
     </div>
 </section>
