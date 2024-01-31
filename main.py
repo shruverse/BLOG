@@ -100,12 +100,9 @@ def admin_only(f):
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-
-        # Check if user email is already present in the database.
         result = db.session.execute(db.select(User).where(User.email == form.email.data))
         user = result.scalar()
         if user:
-            # User already exists
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for('login'))
 
@@ -121,7 +118,6 @@ def register():
         )
         db.session.add(new_user)
         db.session.commit()
-        # This line will authenticate the user with Flask-Login
         login_user(new_user)
         return redirect(url_for("get_all_posts"))
     return render_template("register.html", form=form, current_user=current_user)
@@ -182,7 +178,7 @@ def search():
 def account():
     change_password_form = ChangePasswordForm()
     if change_password_form.validate_on_submit():
-        user = User.query.get(current_user.id)
+        user = db.session.get(User, current_user.id)
         if user and check_password_hash(user.password, change_password_form.current_password.data):
             if change_password_form.new_password.data == change_password_form.confirm_new_password.data:
                 user.password = generate_password_hash(change_password_form.new_password.data, method='pbkdf2:sha256',
@@ -194,7 +190,7 @@ def account():
                 flash("New passwords don't match. Please try again.")
         else:
             flash("Incorrect current password. Please try again.")
-    user = User.query.get(current_user.id)
+    user = db.session.get(User, current_user.id)
     return render_template("account.html", change_password_form=change_password_form, current_user=current_user, user=user)
 
 
@@ -434,7 +430,7 @@ def delete_account(del_id):
 def change_email():
     change_email_form = ChangeEmailForm()
     if change_email_form.validate_on_submit():
-        user = User.query.get(current_user.id)
+        user = db.session.get(User, current_user.id)
         if user and check_password_hash(user.password, change_email_form.current_password.data):
             user.email = change_email_form.new_email.data
             db.session.commit()
@@ -442,7 +438,7 @@ def change_email():
             return redirect(url_for("account"))
         else:
             flash("Incorrect current password. Please try again.")
-    user = User.query.get(current_user.id)
+    user = db.session.get(User, current_user.id)
     return render_template("change-email.html", form=change_email_form, current_user=current_user, user=user)
 
 
@@ -451,7 +447,7 @@ def change_email():
 def change_username():
     change_username_form = ChangeUsernameForm()
     if change_username_form.validate_on_submit():
-        user = User.query.get(current_user.id)
+        user = db.session.get(User, current_user.id)
         if user and check_password_hash(user.password, change_username_form.current_password.data):
             user.name = change_username_form.new_username.data
             db.session.commit()
@@ -459,7 +455,7 @@ def change_username():
             return redirect(url_for("account"))
         else:
             flash("Incorrect current password. Please try again.")
-    user = User.query.get(current_user.id)
+    user = db.session.get(User, current_user.id)
     return render_template("change-username.html", form=change_username_form, current_user=current_user, user=user)
 
 
