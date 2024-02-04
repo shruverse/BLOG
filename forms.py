@@ -49,13 +49,13 @@ class SearchForm(FlaskForm):
 class ChangeEmailForm(FlaskForm):
     new_email = StringField("Email", validators=[DataRequired()])
     current_password = PasswordField("Current Password", validators=[DataRequired()])
-    submit = SubmitField("Change Password")
+    submit = SubmitField("Change Email")
 
 
 class ChangeUsernameForm(FlaskForm):
     new_username = StringField("Username", validators=[DataRequired()])
     current_password = PasswordField("Current Password", validators=[DataRequired()])
-    submit = SubmitField("Change Password")
+    submit = SubmitField("Change Username")
 
 
 class SuggestPostForm(FlaskForm):

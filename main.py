@@ -87,10 +87,8 @@ with app.app_context():
 def admin_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # If id is not 1 then return abort with 403 error
         if current_user.id != 1:
             return abort(403)
-        # Otherwise continue with the route function
         return f(*args, **kwargs)
 
     return decorated_function
@@ -131,11 +129,9 @@ def login():
         result = db.session.execute(db.select(User).where(User.email == form.email.data))
         # Note, email in db is unique so will only have one result.
         user = result.scalar()
-        # Email doesn't exist
         if not user:
             flash("That email does not exist, please try again.")
             return redirect(url_for('login'))
-        # Password incorrect
         elif not check_password_hash(user.password, password):
             flash('Password incorrect, please try again.')
             return redirect(url_for('login'))
@@ -373,9 +369,7 @@ def delete_user(user_id):
     db.session.delete(user_to_delete)
     db.session.commit()
     flash("User deleted successfully!")
-    result = db.session.execute(db.select(User))
-    all_users = result.scalars().all()
-    return render_template("admin/users-table.html", users=all_users)
+    return redirect(url_for("users_table"))
 
 
 @app.route("/admin/delete_comment/<int:comment_id>")
@@ -384,9 +378,7 @@ def delete_comment(comment_id):
     db.session.delete(comment_to_delete)
     db.session.commit()
     flash("Comment deleted successfully!")
-    result_comments = db.session.execute(db.select(Comment))
-    all_comments = result_comments.scalars().all()
-    return render_template("admin/comments-table.html", comments=all_comments)
+    return redirect(url_for("comments_table"))
 
 
 @app.route("/admin/delete-post/<int:post_id>")
@@ -396,9 +388,7 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     flash("Post deleted successfully!")
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
-    return render_template("admin/posts-table.html", all_posts=posts, page=1)
+    return redirect(url_for("posts_table"))
 
 
 @app.route("/admin/delete-suggestion/<int:suggestion_id>")
@@ -408,9 +398,7 @@ def delete_suggestion(suggestion_id):
     db.session.delete(suggestion_to_delete)
     db.session.commit()
     flash("Suggestion deleted successfully!")
-    result = db.session.query(Suggestions).order_by(desc(Suggestions.id))
-    suggestions = result.all()
-    return render_template("admin/suggestions-table.html", suggestions=suggestions, page=1)
+    return redirect(url_for("suggestions_table"))
 
 
 @app.route("/delete-account/<int:del_id>")
