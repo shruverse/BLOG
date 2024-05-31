@@ -21,6 +21,10 @@
           </div>
         </div>
 
+        <div class="container text-center mt-5">
+            <h2>Comment Section</h2>
+            <hr class="mx-auto">
+        </div>
          <!-- Comments Area -->
         <!-- Load the CKEditor -->
         {{ ckeditor.load() }}
@@ -28,6 +32,10 @@
         {{ ckeditor.config(name='comment_text') }}
         <!-- Create the wtf quick form from CommentForm -->
         {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <div class="container text-center mt-5">
+            <h2>Comments</h2>
+            <hr class="mx-auto">
+        </div>
         <div class="comment">
           <ul class="commentList">
             <!-- Show all comments -->
