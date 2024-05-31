@@ -15,6 +15,12 @@ __pycache__/
 /static/images/*.gif
 /static/images/*.svg
 
+# Ignore profile picture files in the static folder
+/static/profile_pics/*.jpg
+/static/profile_pics/*.png
+/static/profile_pics/*.gif
+/static/profile_pics/*.svg
+
 # Distribution / packaging
 .Python
 build/
