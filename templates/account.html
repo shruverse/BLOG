@@ -1,5 +1,5 @@
 {% include "header.html" %}
-<section class="my-5 py-5">
+<section class="my-5 py-5" xmlns="http://www.w3.org/1999/html">
     <div class="row container mx-auto">
          {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -40,10 +40,13 @@
         <hr class="mx-auto">
         {{ change_password_form.hidden_tag() }}
         <div class="form-group">
-            {{ change_password_form.current_password.label }} {{ change_password_form.current_password(class="form-control") }}
+            {{ change_password_form.current_password.label }}
+            {{ change_password_form.current_password(class="form-control") }}
+
         </div>
         <div class="form-group">
-            {{ change_password_form.new_password.label }} {{ change_password_form.new_password(class="form-control") }}
+            {{ change_password_form.new_password.label }}
+            {{ change_password_form.new_password(class="form-control") }}
         </div>
         <div class="form-group">
             {{ change_password_form.confirm_new_password.label }} {{ change_password_form.confirm_new_password(class="form-control") }}

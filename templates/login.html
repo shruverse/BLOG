@@ -21,14 +21,51 @@
       {% endfor %}
       {% endif %}
       {% endwith %}
-        <!--Rendering login form here-->
-        {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-        <div class="form-group" style="margin-top: 10px;">
+
+          <form method="POST">
+              {{ form.hidden_tag() }}
+
+              <div class="form-group">
+                  <label for="email">{{ form.email.label }}</label>
+                  {{ form.email(class="form-control") }}
+              </div>
+
+              <div class="form-group">
+                  <label for="password">{{ form.password.label }}</label>
+                  <div class="input-group">
+                      {{ form.password(class="form-control", id="password") }} <!-- Manually adding id for JavaScript -->
+                      <button type="button" id="show-password-btn" class="input-group-text" onclick="togglePassword()">Show</button>
+                  </div>
+              </div>
+
+              <div class="form-group mt-2">
+                  {{ form.submit(class="btn btn-primary") }}
+              </div>
+
+          </form>
+
+          <div class="form-group" style="margin-top: 10px;">
             <a id="register-url" style="text-decoration: none; font-weight: 900; color: blueviolet; font-size: 1.2em;" href="{{ url_for ('register') }}">Don't have an account? Register!</a>
         </div>
       </div>
     </div>
     </div>
 </section>
+
+<script>
+  // JavaScript function to toggle password visibility
+  function togglePassword() {
+    var passwordField = document.getElementById("password");
+    var toggleBtn = document.getElementById("show-password-btn");
+
+    if (passwordField.type === "password") {
+      passwordField.type = "text"; // Show the password
+      toggleBtn.textContent = "Hide"; // Change button text
+    } else {
+      passwordField.type = "password"; // Hide the password
+      toggleBtn.textContent = "Show"; // Change button text
+    }
+  }
+</script>
 
 {% include "footer.html" %} {% endblock %}
