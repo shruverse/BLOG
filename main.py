@@ -1,4 +1,5 @@
 from datetime import date
+import regex
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
@@ -103,6 +104,13 @@ def register():
         if user:
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for('login'))
+
+        # password validation
+        password = form.password.data
+        password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;"\'<>,.?/\\|`~]).{8,}$'
+        if not regex.match(password_regex, password):
+            flash("Password must contain at least one uppercase letter, lowercase letter, number, symbol and should be more than 8 characters!")
+            return redirect(url_for('register'))
 
         hash_and_salted_password = generate_password_hash(
             form.password.data,
